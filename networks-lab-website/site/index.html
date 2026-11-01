@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Computer Networks Lab – Packet Tracer Programs</title>
+<style>
+:root{--paper:#eef1f3;--card:#fff;--ink:#16222c;--muted:#5b6b78;--line:#cfd7dd;--cable:#d9480f;--cable-d:#a83608;--code:#16222c;--codefg:#e8f1f7}
+@media (prefers-color-scheme:dark){:root{--paper:#11181e;--card:#1a242c;--ink:#e6edf2;--muted:#93a4b1;--line:#2c3a45;--cable:#ff7a3d;--cable-d:#ffa070;--code:#0b1116;--codefg:#d6e6f2}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 "Segoe UI",system-ui,sans-serif}
+header{padding:28px clamp(16px,4vw,48px);border-bottom:3px solid var(--cable);display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+h1{margin:0;font:700 clamp(1.5rem,3vw,2.1rem)/1.15 Georgia,"Times New Roman",serif;letter-spacing:-.01em}
+header p{margin:4px 0 0;color:var(--muted)}
+.btn{display:inline-block;background:var(--cable);color:#fff;border:0;border-radius:6px;padding:11px 20px;font:600 1rem "Segoe UI",system-ui,sans-serif;text-decoration:none;cursor:pointer}
+.btn:hover{background:var(--cable-d)}
+.btn.alt{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn.alt:hover{background:var(--ink);color:var(--paper)}
+:focus-visible{outline:3px solid var(--cable);outline-offset:2px}
+.wrap{display:grid;grid-template-columns:minmax(230px,300px) 1fr;gap:0;max-width:1300px;margin:0 auto}
+nav{border-right:1px solid var(--line);padding:16px 0;position:sticky;top:0;align-self:start;max-height:100vh;overflow:auto}
+nav button{display:flex;gap:12px;width:100%;text-align:left;background:none;border:0;border-left:4px solid transparent;padding:10px 16px;color:var(--ink);font:inherit;cursor:pointer}
+nav button .n{min-width:1.8em;color:var(--muted);font-variant-numeric:tabular-nums}
+nav button:hover{background:var(--card)}
+nav button[aria-current="true"]{background:var(--card);border-left-color:var(--cable);font-weight:600}
+main{padding:28px clamp(16px,4vw,48px) 64px;min-width:0}
+main h2{margin:0 0 4px;font:700 clamp(1.4rem,2.6vw,1.9rem)/1.2 Georgia,serif}
+.file{color:var(--muted);font-family:Consolas,monospace;font-size:.9rem}
+.sec{margin-top:26px}
+.sec h3{margin:0 0 8px;font-size:1.05rem}
+.sec p,.sec li{max-width:70ch}
+ol{padding-left:1.3em;margin:0}li{margin:5px 0}
+pre{background:var(--code);color:var(--codefg);padding:14px 16px;border-radius:6px;overflow:auto;font:.92rem/1.5 Consolas,monospace;margin:0}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{background:var(--paper)}tr:last-child td{border-bottom:0}
+.result{border-left:4px solid var(--cable);padding:4px 0 4px 14px;background:none}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.pn{display:flex;justify-content:space-between;margin-top:40px;gap:12px}
+@media (max-width:760px){.wrap{display:block}nav{position:static;max-height:240px;border-right:0;border-bottom:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Computer Networks Laboratory</h1>
+    <p>15 Cisco Packet Tracer programs – read the explanation, then download the .pkt file.</p>
+  </div>
+  <a class="btn alt" href="files/Computer_Networks_Laboratory_Manual.pdf" download>Download lab manual (PDF)</a>
+</header>
+<div class="wrap">
+  <nav id="nav" aria-label="Experiments"></nav>
+  <main id="main" tabindex="-1"></main>
+</div>
+<script>
+const X=[
+{t:"Basic LAN Setup and IP Addressing",f:"basic_lan_setup.pkt",
+aim:"Create a basic LAN in Packet Tracer, assign IP addresses to the PCs and verify communication with ping.",
+steps:["Place 1 switch, PC0 and Laptop0 in the workspace.","Connect PC0 to Fa0/1 and Laptop0 to Fa0/2 with copper straight-through cables; wait for green link lights.","Set the IP addresses under Desktop → IP Configuration and check them with ipconfig.","Ping each device from the other and confirm the replies.","In Simulation Mode, add a Simple PDU from PC0 to Laptop0 and watch the ICMP Echo Request and Reply cross the switch.","Open the switch Config and CLI tabs to view port status and basic commands."],
+cmd:"ipconfig\nping 192.168.10.2\nping 192.168.10.1",
+tab:[["PC0","192.168.10.1","255.255.255.0","—"],["Laptop0","192.168.10.2","255.255.255.0","—"]],
+res:"A basic LAN was built, IPs were assigned, and connectivity was verified with ping (4 sent, 4 received, 0% loss). Packet flow was observed in Simulation Mode."},
+{t:"Network Topology Creation (Star, Bus, Ring, Mesh)",f:"TOPOLOGY.pkt",
+aim:"Build and study Star, Bus, Ring and Mesh topologies and understand their structure and communication.",
+steps:["Star: one switch at the centre, PCs on Fa0/1–Fa0/4 with straight-through cables.","Bus: a hub (or chained switches) with 4 PCs; note a hub broadcasts all traffic to every port.","Ring: four devices, each cabled to exactly two neighbours so the cabling forms a closed loop (cross-over cables).","Mesh: four devices, each cabled directly to all three others (six links in total).","Assign the IPs from the table to every device and ping between them, including non-adjacent ones in the ring."],
+cmd:"ping 192.168.1.20\nping 192.168.4.20\nping 192.168.4.30\nping 192.168.4.40",
+tab:[["PC0–PC3 (Star)","192.168.1.10 / .20 / .30 / .40","255.255.255.0","—"],["PC0–PC3 (Bus)","192.168.2.10 / .20 / .30 / .40","255.255.255.0","—"],["Device0–3 (Ring)","192.168.3.10 / .20 / .30 / .40","255.255.255.0","—"],["PC0–PC3 (Mesh)","192.168.4.10 / .20 / .30 / .40","255.255.255.0","—"]],
+res:"All four topologies were created and communication was verified, showing how traffic handling and redundancy differ between star, bus, ring and mesh."},
+{t:"Ping Command for Connectivity Testing",f:"ping_comment_and_test_connectivity.pkt",
+aim:"Use ping and tracert to test connectivity and interpret round-trip time, TTL and packet loss.",
+steps:["Build a LAN with 1 switch, PC0, PC1 and Server0; set their IPs.","Ping PC1 and the server from PC0 and read the Echo Replies (time and TTL).","Run a continuous ping with -t and stop it with Ctrl+C to see the statistics.","Ping a non-existent address (192.168.10.50) and observe Request Timed Out.","Run tracert to see the path and hop count.","In Simulation Mode, inspect the ICMP packets layer by layer."],
+cmd:"ping 192.168.10.2\nping 192.168.10.3\nping -t 192.168.10.3\nping 192.168.10.50\ntracert 192.168.10.3",
+tab:[["PC0","192.168.10.1","255.255.255.0","—"],["PC1","192.168.10.2","255.255.255.0","—"],["Server0","192.168.10.3","255.255.255.0","—"]],
+res:"Reachable and unreachable hosts were tested, RTT and TTL values were interpreted, and the packet path was traced with tracert."},
+{t:"ARP Protocol Simulation in LAN",f:"arp.pkt",
+aim:"Simulate ARP in a LAN and observe how IP addresses are resolved to MAC addresses.",
+steps:["Build a LAN with 1 switch and 4 PCs and set the IPs.","On PC0, view the ARP cache with arp -a, then clear it with arp -d.","In Simulation Mode, filter for ARP and ICMP only, then send a ping from PC0 to PC1.","Observe PC0 broadcast an ARP Request, then PC1 answer with a unicast ARP Reply carrying its MAC address.","Only after that does PC0 send the ICMP Echo Request.","Return to Realtime Mode and run arp -a again to see the new IP-to-MAC entry."],
+cmd:"arp -a\narp -d\nping 192.168.20.2\narp -a",
+tab:[["PC0","192.168.20.1","255.255.255.0","—"],["PC1","192.168.20.2","255.255.255.0","—"],["PC2","192.168.20.3","255.255.255.0","—"],["PC4","192.168.20.4","255.255.255.0","—"]],
+res:"The broadcast ARP Request and unicast ARP Reply were observed, and the IP-to-MAC resolution was confirmed in the ARP cache."},
+{t:"Ethernet LAN Setup Using Switch",f:"ethernet_lan.pkt",
+aim:"Configure an Ethernet LAN with a Layer 2 switch and examine how the switch learns MAC addresses.",
+steps:["Connect PC0, Laptop0 and Server0 to separate FastEthernet ports on one switch.","Set the IPs from the table.","On the switch Config tab, set the Display Name to LAN_SW1 and check that each port is On with its speed and duplex.","Ping between the devices so the switch has traffic to learn from.","In the switch CLI, run show mac-address-table and check each MAC is tied to the right port."],
+cmd:"ping 192.168.10.2\nping 192.168.10.4\n\nSwitch>enable\nSwitch#show mac-address-table",
+tab:[["PC0","192.168.10.3","255.255.255.0","—"],["Laptop0","192.168.10.4","255.255.255.0","—"],["Server0","192.168.10.2","255.255.255.0","—"],["Switch0 (LAN_SW1)","Not configured","—","—"]],
+res:"The Ethernet LAN worked and the switch's dynamically learned MAC address table confirmed correct Layer 2 operation."},
+{t:"Wireless LAN (Wi-Fi) Configuration",f:"wirelesslan.pkt",
+aim:"Configure a wireless LAN, connect wireless devices to it and verify connectivity.",
+steps:["Place the wireless device (access point / WRT300N router) and four end devices.","Give each end device a WPC300N wireless module (power off, swap the wired NIC, power on).","Set the SSID (LabWiFi), channel and network mode on the wireless device.","Enable WPA2-PSK with a passphrase and enter the same passphrase in each device's PC Wireless → Connect tab.","Let the devices obtain addresses by DHCP, check signal strength, then ping between them."],
+cmd:"ping 192.168.0.100\nping 192.168.0.101\nping 192.168.0.102",
+tab:[["TabletPC0","192.168.0.100 (DHCP)","255.255.255.0","—"],["PC0","192.168.0.101 (DHCP)","255.255.255.0","—"],["Laptop0","192.168.0.102 (DHCP)","255.255.255.0","—"],["Server0","192.168.0.103 (DHCP)","255.255.255.0","—"]],
+res:"The wireless LAN with WPA2-PSK security was configured, devices associated, IPs were assigned, and connectivity was verified."},
+{t:"Static Routing Between Two Networks",f:"static_rooting.pkt",
+aim:"Configure static routes between two networks using routers and verify inter-network communication.",
+steps:["Build two LANs: PC0, PC1 → Switch0 → Router0, and PC2, PC3 → Switch1 → Router1, with the routers linked through their Gi0/1 ports.","Configure each router interface with the IP and mask from the table and turn Port Status On.","Router0 → ROUTING → STATIC: network 192.168.2.0, mask 255.255.255.0, next hop 10.0.0.2.","Router1 → ROUTING → STATIC: network 192.168.1.0, mask 255.255.255.0, next hop 10.0.0.1.","Set each PC's IP and default gateway, confirm the routes are listed, then ping across the networks."],
+cmd:"ping 192.168.2.2\nping 192.168.2.3",
+tab:[["PC0 / PC1","192.168.1.2 / .3","255.255.255.0","192.168.1.1"],["Router0 Gi0/0","192.168.1.1","255.255.255.0","—"],["Router0 Gi0/1","10.0.0.1","255.255.255.252","—"],["Router1 Gi0/1","10.0.0.2","255.255.255.252","—"],["Router1 Gi0/0","192.168.2.1","255.255.255.0","—"],["PC2 / PC3","192.168.2.2 / .3","255.255.255.0","192.168.2.1"]],
+res:"Static routing worked: the first ping may time out while ARP completes, after which replies arrive across both networks (TTL=126)."},
+{t:"RIP Routing Configuration (Basic Dynamic Routing)",f:"RIP.pkt",
+aim:"Configure RIP on Cisco routers so they exchange routing information dynamically.",
+steps:["Build a three-router chain, each router with its own switch and two PCs.","Set the IP address and mask on every router interface from the table and turn each port On.","Enable RIP on each router under ROUTING → RIP and add every network it is connected to.","Wait a few seconds for the routers to converge.","Set the PC IPs and gateways, then ping between the LANs to confirm routing across all three routers."],
+cmd:"ping 192.168.20.2\nping 192.168.30.3",
+tab:[["PC0 / PC1","192.168.10.2 / .3","255.255.255.0","192.168.10.1"],["Router0 LAN","192.168.10.1","255.255.255.0","—"],["Router1 LAN","192.168.20.1","255.255.255.0","—"],["PC2 / PC3","192.168.20.2 / .3","255.255.255.0","192.168.20.1"],["Router2 LAN","192.168.30.1","255.255.255.0","—"],["PC4 / PC5","192.168.30.2 / .3","255.255.255.0","192.168.30.1"]],
+res:"RIP was enabled and the routers exchanged routes dynamically; end-to-end connectivity between the remote LANs was confirmed."},
+{t:"VLAN Creation and Simple Switch Configuration",f:"vlan_creation.pkt",
+aim:"Create VLANs on a switch, assign ports to them and verify isolation at Layer 2.",
+steps:["Connect the PCs to the switch ports.","On the switch Config tab, open VLAN Database and add VLAN 10 (Sales) and VLAN 20 (HR).","For each FastEthernet port, keep the mode as Access and pick the VLAN: Fa0/1 and Fa0/2 → VLAN 10, Fa0/3 and Fa0/4 → VLAN 20.","Set the PC IPs from the table.","Ping within a VLAN (works) and across VLANs (fails, because there is no inter-VLAN routing)."],
+cmd:"ping 10.0.0.2",
+tab:[["PC0 (VLAN 10)","10.0.0.1","255.255.0.0","—"],["PC1 (VLAN 10)","10.0.0.2","255.255.0.0","—"],["PC2 (VLAN 20)","192.168.0.1","255.255.255.0","—"]],
+res:"VLANs were created and ports assigned. Devices in the same VLAN communicated while devices in different VLANs stayed isolated."},
+{t:"Inter-VLAN Communication Setup",f:"inter_lan.pkt",
+aim:"Configure inter-VLAN routing using the router-on-a-stick method.",
+steps:["Build the topology with one router, the switches and four PCs; one link to the router carries both VLANs.","Create VLAN 10 (Sales) and VLAN 20 (HR) and assign the access ports.","Set the port toward the router, and the links between switches, to Trunk.","On the router CLI, create sub-interfaces with 802.1Q encapsulation (commands below).","Set each PC's IP and its VLAN's sub-interface as gateway.","Check with show ip interface brief, then ping from VLAN 10 to VLAN 20."],
+cmd:"Router>enable\nRouter#configure terminal\nRouter(config)#interface gigabitEthernet0/0.10\nRouter(config-subif)#encapsulation dot1Q 10\nRouter(config-subif)#ip address 192.168.10.1 255.255.255.0\nRouter(config-subif)#exit\nRouter(config)#interface gigabitEthernet0/0.20\nRouter(config-subif)#encapsulation dot1Q 20\nRouter(config-subif)#ip address 192.168.20.1 255.255.255.0\nRouter(config-subif)#exit\nRouter(config)#interface gigabitEthernet0/0\nRouter(config-if)#no shutdown\nRouter(config-if)#end\nRouter#show ip interface brief",
+tab:[["Router Gi0/0.10","192.168.10.1","255.255.255.0","—"],["Router Gi0/0.20","192.168.20.1","255.255.255.0","—"],["PC0 / PC1 (VLAN 10)","192.168.10.2 / .3","255.255.255.0","192.168.10.1"],["PC2 / PC3 (VLAN 20)","192.168.20.2 / .3","255.255.255.0","192.168.20.1"]],
+res:"Trunking and router sub-interfaces were configured, and devices in different VLANs could communicate through the router."},
+{t:"DHCP Configuration for Automatic IP Allocation",f:"dhcp.pkt",
+aim:"Configure a DHCP server so PCs obtain IP settings automatically.",
+steps:["Connect a server and three PCs to a switch.","Give the server a static IP (it must not depend on DHCP).","Server → Services → DHCP: turn it On.","Create the pool: name LAN_POOL, gateway 192.168.10.1, DNS 192.168.10.2, start IP 192.168.10.3, mask 255.255.255.0, max users 50. Click Save, then Add.","Set each PC to DHCP and watch it receive its address.","Confirm with ipconfig /all and ping."],
+cmd:"ipconfig /all\nping 192.168.10.2",
+tab:[["Server0 (static)","192.168.10.2","255.255.255.0","192.168.10.1"],["PC0 (DHCP)","192.168.10.5 (leased)","255.255.255.0","192.168.10.1"],["PC1 (DHCP)","192.168.10.6 (leased)","255.255.255.0","192.168.10.1"],["PC2 (DHCP)","192.168.10.7 (leased)","255.255.255.0","192.168.10.1"]],
+res:"The DHCP server leased valid IP settings to the PCs, and connectivity using the leased addresses was verified."},
+{t:"DNS Configuration and Name Resolution",f:"dns.pkt",
+aim:"Configure a DNS server that resolves a domain name to an IP address and verify it from a client.",
+steps:["Build the LAN with a server (DNS and HTTP) and PCs; set their IPs.","Server → Services → DNS: turn it On.","Add an A record: name www.college.com with the address from the lab manual.","Make sure HTTP is On so the name leads to a working web page.","Set each PC's DNS server to 192.168.10.2.","Open http://www.college.com in the PC's web browser, or ping the name."],
+cmd:"ping www.college.com",
+tab:[["Server0 (DNS + HTTP)","192.168.10.2","255.255.255.0","192.168.10.1"],["PC0","192.168.10.3","255.255.255.0","192.168.10.1"],["PC1","192.168.10.4","255.255.255.0","192.168.10.1"],["PC2","192.168.10.5","255.255.255.0","192.168.10.1"]],
+res:"The domain name was mapped to an IP and name resolution was verified from the client using the browser and ping."},
+{t:"HTTP Web Server and Client Communication",f:"Http.pkt",
+aim:"Configure an HTTP server and verify client-server communication through a web browser.",
+steps:["Connect the server, PC0 and Laptop0 to a switch and set their IPs.","Server → Services → HTTP: make sure HTTP is On.","Optionally edit index.html so you can recognise the page.","Open Desktop → Web Browser on PC0 and enter the server's IP address.","Repeat on Laptop0 to show several clients can use the same server.","In Simulation Mode filter HTTP and TCP to see the three-way handshake, then GET and response."],
+cmd:"http://192.168.10.2",
+tab:[["Server0","192.168.10.2","255.255.255.0","—"],["PC0","192.168.10.3","255.255.255.0","—"],["Laptop0","192.168.10.4","255.255.255.0","—"]],
+res:"The HTTP server was reached from multiple clients, and the TCP connection plus request-response exchange was observed in Simulation Mode."},
+{t:"FTP File Transfer Between Client and Server",f:"ftp.pkt",
+aim:"Configure an FTP server and transfer files between a client and the server.",
+steps:["Connect the server, PC0 and Laptop0 to a switch and set their IPs.","Server → Services → FTP: turn it On.","Add a user (the manual uses labuser / lab123) with Read, Write and List permission.","From a client's Command Prompt, open an FTP session and log in.","Upload with put, download with get, list with dir, and close with quit."],
+cmd:"ftp 192.168.10.2\nftp> put report.txt\nftp> get welcome.txt\nftp> dir\nftp> quit",
+tab:[["Server0 (FTP)","192.168.10.2","255.255.255.0","—"],["PC0","192.168.10.3","255.255.255.0","—"],["Laptop0","192.168.10.4","255.255.255.0","—"]],
+res:"File transfer between client and server was verified using put, get and dir over FTP."},
+{t:"TCP vs UDP Basic Communication Simulation",f:"tcp_and_udp.pkt",
+aim:"Compare TCP and UDP communication and observe how connection setup and delivery differ.",
+steps:["Build the LAN with a server and two PCs; set their IPs.","On the server, turn On HTTP (TCP) and TFTP (UDP).","In Simulation Mode, filter TCP and HTTP; load the server page from PC0 and watch SYN, SYN-ACK, ACK, then data, then FIN/ACK teardown.","Reset the filters to UDP and TFTP; start a TFTP request and notice the data is sent with no handshake.","Record the differences between the two protocols."],
+cmd:"tftp",
+tab:[["Server0","192.168.10.1","255.255.255.0","—"],["PC0","192.168.10.2","255.255.255.0","—"],["PC1","192.168.10.3","255.255.255.0","—"]],
+res:"TCP (HTTP) uses a three-way handshake, acknowledgements, retransmission and has higher overhead. UDP (TFTP) has no handshake, is best-effort and has lower overhead."}
+];
+const nav=document.getElementById('nav'),main=document.getElementById('main');
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+X.forEach((e,i)=>{const b=document.createElement('button');b.innerHTML='<span class="n">'+(i+1)+'</span><span>'+esc(e.t)+'</span>';b.onclick=()=>show(i);nav.appendChild(b)});
+function show(i){
+  const e=X[i];
+  [...nav.children].forEach((b,j)=>b.setAttribute('aria-current',j===i));
+  history.replaceState(null,'','#'+(i+1));
+  main.innerHTML=
+   '<h2>Experiment '+(i+1)+': '+esc(e.t)+'</h2><div class="file">files/'+e.f+'</div>'+
+   '<div class="actions"><a class="btn" href="files/'+e.f+'" download>Download '+e.f+'</a></div>'+
+   '<section class="sec"><h3>Aim</h3><p>'+esc(e.aim)+'</p></section>'+
+   '<section class="sec"><h3>Procedure</h3><ol>'+e.steps.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol></section>'+
+   '<section class="sec"><h3>Commands</h3><pre>'+esc(e.cmd)+'</pre></section>'+
+   '<section class="sec"><h3>Configuration table</h3><div class="tw"><table><thead><tr><th>Device</th><th>IP address</th><th>Subnet mask</th><th>Default gateway</th></tr></thead><tbody>'+
+     e.tab.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div></section>'+
+   '<section class="sec"><h3>Result</h3><p class="result">'+esc(e.res)+'</p></section>'+
+   '<div class="pn"><button class="btn alt" '+(i?'':'disabled style="opacity:.4;cursor:default"')+' id="pv">Previous</button><button class="btn alt" '+(i<X.length-1?'':'disabled style="opacity:.4;cursor:default"')+' id="nx">Next</button></div>';
+  document.getElementById('pv').onclick=()=>i&&show(i-1);
+  document.getElementById('nx').onclick=()=>i<X.length-1&&show(i+1);
+  main.focus({preventScroll:true});window.scrollTo(0,0);
+}
+show(Math.min(Math.max((parseInt(location.hash.slice(1))||1)-1,0),X.length-1));
+</script>
+</body>
+</html>
